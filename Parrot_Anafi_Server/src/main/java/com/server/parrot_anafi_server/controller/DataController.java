@@ -22,7 +22,7 @@ public class DataController {
     private int batteryCharge = 0;
     @Getter
     @Setter
-    private float altitude = 0;
+    private double altitude = 0;
     @Getter
     @Setter
     private boolean connectedToDrone = false;
@@ -39,7 +39,7 @@ public class DataController {
 
     @PostMapping("/altitude")
     public HttpStatus addAltitude(@RequestBody Map<String, Object> altitude) {
-        Float currentAltitude = (Float) altitude.get("altitude");
+        Double currentAltitude = (Double) altitude.get("altitude");
         setAltitude(currentAltitude);
         return HttpStatus.OK;
     }
@@ -66,8 +66,8 @@ public class DataController {
     }
 
     @GetMapping("/altitude")
-    public Map<String, Float> getCurrentAltitude() {
-        Map<String, Float> altitude = new HashMap<String, Float>();
+    public Map<String, Double> getCurrentAltitude() {
+        Map<String, Double> altitude = new HashMap<String, Double>();
         altitude.put("altitude", getAltitude());
         return altitude;
     }
