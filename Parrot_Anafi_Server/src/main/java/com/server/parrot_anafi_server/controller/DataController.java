@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Queue;
 
 @RestController
+@CrossOrigin(origins="*")
 @RequestMapping("/api")
 public class DataController {
 
