@@ -5,14 +5,14 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:anafi_parrot_website/extensions/hover_extensions.dart';
 
 class CallToAction extends StatelessWidget {
-  final String? title;
-  const CallToAction({Key? key, this.title}) : super(key: key);
+  final List? state;
+  CallToAction({Key? key, this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
-      mobile: CallToActionMobile(title: title),
-      desktop: CallToActionTabletDesktop(title: title),
+      mobile: CallToActionMobile(state: state),
+      desktop: CallToActionTabletDesktop(state: state),
     ).showCursorOnHover.moveUpOnHover;
   }
 }

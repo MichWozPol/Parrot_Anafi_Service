@@ -3,16 +3,17 @@ import 'package:anafi_parrot_website/widgets/website_details/website_details.dar
 import 'package:flutter/material.dart';
 
 class HomeContentMobile extends StatelessWidget {
-  const HomeContentMobile({Key? key}) : super(key: key);
+  final List? state;
+  HomeContentMobile(this.state);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const <Widget>[
-        Expanded(child: WebsiteDetails()),
-        CallToAction(title: 'Enter Live View')
+      children: <Widget>[
+        const Expanded(child: WebsiteDetails()),
+        CallToAction(state: state)
       ],
     );
   }
