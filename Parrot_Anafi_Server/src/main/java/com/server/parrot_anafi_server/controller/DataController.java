@@ -30,6 +30,9 @@ public class DataController {
     @Getter
     @Setter
     private Queue<byte[]> videoStream;
+    @Getter
+    @Setter
+    private Map<String, Double> GPSLocation = new HashMap<>() {{put("longitude", 0d); put("latitude", 0d);}};
 
     @PostMapping("/battery")
     public HttpStatus addBatteryCharge(@RequestBody Map<String, Object> batteryCharge) {
@@ -49,6 +52,17 @@ public class DataController {
     public HttpStatus addConnection(@RequestBody Map<String, Object> connectedToDrone) {
         Boolean isConnectedToDrone = (Boolean) connectedToDrone.get("connection");
         setConnectedToDrone(isConnectedToDrone);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/gpslocation")
+    public HttpStatus addGPSLocation(@RequestBody Map<String, Object> gpsLocation) {
+        Double currentLatitude = ((Double) gpsLocation.get("latitude"));
+        Double currentLongitude = (Double) gpsLocation.get("longitude");
+        Map<String, Double> currentGPSLocation = new HashMap<>();
+        currentGPSLocation.put("latitude", currentLatitude);
+        currentGPSLocation.put("longitude", currentLongitude);
+        setGPSLocation(currentGPSLocation);
         return HttpStatus.OK;
     }
 
@@ -73,6 +87,14 @@ public class DataController {
         return altitude;
     }
 
+    @GetMapping("/gpslocation")
+    public Map<String, Double> getCurrentGPSLocation() {
+        Map<String, Double> gpsLocation = new HashMap<>();
+        gpsLocation.put("latitude", getGPSLocation().get("latitude"));
+        gpsLocation.put("longitude", getGPSLocation().get("longitude"));
+        return gpsLocation;
+    }
+
     @PostMapping("/stream")
     public HttpStatus readSteam(@RequestBody Map<String, byte[]> stream) throws IOException {
         offset = 0;
@@ -88,4 +110,5 @@ public class DataController {
         byteArrayOutputStream.close();
         return HttpStatus.OK;
     }
+
 }
