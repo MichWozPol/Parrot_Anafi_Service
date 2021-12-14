@@ -31,7 +31,8 @@ class Streaming:
         )
         # Setup your callback functions to do some live video processing
         self.drone.streaming.set_callbacks(
-            h264_cb=self.h264_frame_cb
+            raw_cb=self.yuv_frame_cb
+            # h264_cb=self.h264_frame_cb
 
         )
 
@@ -50,10 +51,10 @@ class Streaming:
         This function will be called by Olympe for each decoded YUV frame.
             :type yuv_frame: olympe.VideoFrame
         """
-        frame_array = yuv_frame.as_ndarray()
-        print(np.shape(frame_array))
-        frame_array = frame_array.tolist()
-        requests.post(url=self.endpoint, json={'stream': frame_array})
+        if yuv_frame is not None:
+            frame_array = yuv_frame.as_ndarray()
+            frame_array = frame_array.tolist()
+            requests.post(url=self.endpoint, json={'stream': frame_array})
 
 
     def h264_frame_cb(self, h264_frame):
