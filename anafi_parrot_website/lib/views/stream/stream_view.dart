@@ -107,14 +107,14 @@ class _StreamView extends State<StreamView> {
                                                     height: 20,
                                                   ),
                                                   Text(
-                                                      "Longitude: ${snapshot.data!.gpsLocation[0]}",
+                                                      "Latitude: ${snapshot.data!.gpsLocation[1]}",
                                                       style: TextStyle(
                                                           fontSize: 18)),
                                                   const SizedBox(
                                                     height: 20,
                                                   ),
                                                   Text(
-                                                      "Latitude: ${snapshot.data!.gpsLocation[1]}",
+                                                      "Longitude: ${snapshot.data!.gpsLocation[0]}",
                                                       style: TextStyle(
                                                           fontSize: 18)),
                                                 ],
@@ -127,11 +127,11 @@ class _StreamView extends State<StreamView> {
                             child: FlutterMap(
                                 options: MapOptions(
                                   center: latLng.LatLng(
-                                      snapshot.data!.gpsLocation[0] < 90
-                                          ? snapshot.data!.gpsLocation[0]
+                                      snapshot.data!.gpsLocation[1] < 90
+                                          ? snapshot.data!.gpsLocation[1]
                                           : 25,
                                       snapshot.data!.gpsLocation[0] < 90
-                                          ? snapshot.data!.gpsLocation[1]
+                                          ? snapshot.data!.gpsLocation[0]
                                           : 25),
                                   zoom: 13.0,
                                 ),
