@@ -2,6 +2,9 @@ import olympe
 import requests
 import threading
 import signal
+import tempfile
+import os
+import shutil
 
 from olympe.messages.ardrone3.Piloting import TakeOff
 from olympe.messages.common.CommonState import BatteryStateChanged
@@ -109,11 +112,15 @@ def take_image_thread(device):
         # download the photos associated with this media id
         media_info_response = requests.get(MEDIA_URL + media_id)
         media_info_response.raise_for_status()
-
+        download_dir = tempfile.mkdtemp()
         for resource in media_info_response.json()["resources"]:
             image_response = requests.get(ANAFI_URL + resource["url"], stream=True)
+            download_path = os.path.join(download_dir, resource["resource_id"])
             image_response.raise_for_status()
-            requests.post(url=STREAM_URL, json={'stream': image_response.raw})
+            with open(download_path, "wb") as image_file:
+                shutil.copyfileobj(image_response.raw, image_file)
+            files = {'stream': open(download_path, 'rb')}
+            requests.post(url=STREAM_URL, files=files)
 
 # def take_photo(drone):
 #     # take a photo and get the associated media_id
