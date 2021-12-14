@@ -25,10 +25,10 @@ class Streaming:
 
     def start(self):
 
-        self.drone.streaming.set_output_files(
-        video=os.path.join(self.tempd, "streaming.mp4"),
-        metadata=os.path.join(self.tempd, "streaming_metadata.json"),
-        )
+        # self.drone.streaming.set_output_files(
+        # video=os.path.join(self.tempd, "streaming.mp4"),
+        # metadata=os.path.join(self.tempd, "streaming_metadata.json"),
+        # )
         # Setup your callback functions to do some live video processing
         self.drone.streaming.set_callbacks(
             raw_cb=self.yuv_frame_cb
