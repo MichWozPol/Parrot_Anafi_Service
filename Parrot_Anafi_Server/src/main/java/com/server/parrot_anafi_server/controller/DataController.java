@@ -5,9 +5,9 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
@@ -16,8 +16,6 @@ import java.util.Queue;
 @RequestMapping("/api")
 public class DataController {
 
-    private final int byteBufferSize = 1000;
-    private int offset = 0;
     @Getter
     @Setter
     private int batteryCharge = 0;
@@ -29,7 +27,10 @@ public class DataController {
     private boolean connectedToDrone = false;
     @Getter
     @Setter
-    private Queue<byte[]> videoStream;
+    private Queue<Byte[]> videoStream = new LinkedList<Byte[]>();
+    @Getter
+    @Setter
+    private Map<String, Double> GPSLocation = new HashMap<>() {{put("longitude", 0d); put("latitude", 0d);}};
 
     @PostMapping("/battery")
     public HttpStatus addBatteryCharge(@RequestBody Map<String, Object> batteryCharge) {
@@ -49,6 +50,24 @@ public class DataController {
     public HttpStatus addConnection(@RequestBody Map<String, Object> connectedToDrone) {
         Boolean isConnectedToDrone = (Boolean) connectedToDrone.get("connection");
         setConnectedToDrone(isConnectedToDrone);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/gpslocation")
+    public HttpStatus addGPSLocation(@RequestBody Map<String, Object> gpsLocation) {
+        Double currentLatitude = ((Double) gpsLocation.get("latitude"));
+        Double currentLongitude = (Double) gpsLocation.get("longitude");
+        Map<String, Double> currentGPSLocation = new HashMap<>();
+        currentGPSLocation.put("latitude", currentLatitude);
+        currentGPSLocation.put("longitude", currentLongitude);
+        setGPSLocation(currentGPSLocation);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/stream")
+    public HttpStatus readSteam(@RequestBody Map<String, Byte[]> stream) throws IOException {
+        Byte[] streamValue = stream.get("stream");
+        videoStream.add(streamValue);
         return HttpStatus.OK;
     }
 
@@ -73,19 +92,23 @@ public class DataController {
         return altitude;
     }
 
-    @PostMapping("/stream")
-    public HttpStatus readSteam(@RequestBody Map<String, byte[]> stream) throws IOException {
-        offset = 0;
-        byte[] streamValue = stream.get("stream");
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(byteBufferSize);
-        while(stream != null)
-        {
-            byteArrayOutputStream.write(streamValue, offset, byteBufferSize);
-            videoStream.add(byteArrayOutputStream.toByteArray());
-            byteArrayOutputStream.flush();
-            offset += byteBufferSize;
+    @GetMapping("/gpslocation")
+    public Map<String, Double> getCurrentGPSLocation() {
+        Map<String, Double> gpsLocation = new HashMap<>();
+        gpsLocation.put("latitude", getGPSLocation().get("latitude"));
+        gpsLocation.put("longitude", getGPSLocation().get("longitude"));
+        return gpsLocation;
+    }
+
+    @GetMapping("/stream")
+    public Map<String, Byte[]> getStream() {
+        Map<String, Byte[]> currentStream = new HashMap<>();
+        if (!videoStream.isEmpty()) {
+            currentStream.put("stream", videoStream.poll());
         }
-        byteArrayOutputStream.close();
-        return HttpStatus.OK;
+        else {
+            currentStream.put("stream", null);
+        }
+        return currentStream;
     }
 }
