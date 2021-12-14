@@ -36,6 +36,7 @@ dependencies:
   responsive_builder: ^0.4.1
   http: ^0.13.4
   battery_indicator: ^0.1.0
+  flutter_map: ^0.14.0
 
 dev_dependencies:
   flutter_test:

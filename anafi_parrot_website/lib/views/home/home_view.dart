@@ -1,11 +1,10 @@
-import 'dart:html';
-
 import 'package:anafi_parrot_website/views/home/home_content_desktop.dart';
 import 'package:anafi_parrot_website/views/home/home_content_mobile.dart';
 import 'package:anafi_parrot_website/widgets/centered_view/centered_view.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:anafi_parrot_website/models/connection.dart';
+import 'dart:async';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -16,10 +15,25 @@ class HomeView extends StatefulWidget {
 
 class _HomeView extends State<HomeView> {
   late Future<Connection> futureConnection;
+  Timer? _timerClock;
   @override
   void initState() {
     super.initState();
-    futureConnection = fetchConnection();
+    fetchData();
+  }
+
+  @override
+  void dispose() {
+    _timerClock!.cancel();
+    super.dispose();
+  }
+
+  fetchData() {
+    _timerClock = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      setState(() {
+        futureConnection = fetchConnection();
+      });
+    });
   }
 
   List checkConnection(bool connection) {
@@ -33,7 +47,7 @@ class _HomeView extends State<HomeView> {
     } else {
       title = 'Drone is not connected!';
       color = Color.fromARGB(255, 220, 20, 60);
-      enabled = false;
+      enabled = true;
     }
     return [title, color, enabled];
   }
