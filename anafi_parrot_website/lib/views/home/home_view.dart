@@ -47,7 +47,7 @@ class _HomeView extends State<HomeView> {
     } else {
       title = 'Drone is not connected!';
       color = Color.fromARGB(255, 220, 20, 60);
-      enabled = true;
+      enabled = false;
     }
     return [title, color, enabled];
   }
