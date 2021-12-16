@@ -149,11 +149,11 @@ class _StreamView extends State<StreamView> {
                                       width: 20.0,
                                       height: 20.0,
                                       point: latLng.LatLng(
-                                          snapshot.data!.gpsLocation[0] < 90
-                                              ? snapshot.data!.gpsLocation[0]
+                                          snapshot.data!.gpsLocation[1] < 90
+                                              ? snapshot.data!.gpsLocation[1]
                                               : 25,
                                           snapshot.data!.gpsLocation[0] < 90
-                                              ? snapshot.data!.gpsLocation[1]
+                                              ? snapshot.data!.gpsLocation[0]
                                               : 25),
                                       builder: (context) => Container(
                                           child:
