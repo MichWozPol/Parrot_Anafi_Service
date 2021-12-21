@@ -5,11 +5,8 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 @RestController
 @CrossOrigin(origins="*")
@@ -25,9 +22,6 @@ public class DataController {
     @Getter
     @Setter
     private boolean connectedToDrone = false;
-    @Getter
-    @Setter
-    private Queue<Byte[]> videoStream = new LinkedList<Byte[]>();
     @Getter
     @Setter
     private Map<String, Double> GPSLocation = new HashMap<>() {{put("longitude", 0d); put("latitude", 0d);}};
@@ -64,13 +58,6 @@ public class DataController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/stream")
-    public HttpStatus readSteam(@RequestBody Map<String, Byte[]> stream) throws IOException {
-        Byte[] streamValue = stream.get("stream");
-        videoStream.add(streamValue);
-        return HttpStatus.OK;
-    }
-
     @GetMapping("/connection")
     public Map<String, Boolean> getConnection() {
         Map<String, Boolean> connection = new HashMap<String, Boolean>();
@@ -98,17 +85,5 @@ public class DataController {
         gpsLocation.put("latitude", getGPSLocation().get("latitude"));
         gpsLocation.put("longitude", getGPSLocation().get("longitude"));
         return gpsLocation;
-    }
-
-    @GetMapping("/stream")
-    public Map<String, Byte[]> getStream() {
-        Map<String, Byte[]> currentStream = new HashMap<>();
-        if (!videoStream.isEmpty()) {
-            currentStream.put("stream", videoStream.poll());
-        }
-        else {
-            currentStream.put("stream", null);
-        }
-        return currentStream;
     }
 }
